@@ -14,12 +14,37 @@ function spider(url, nesting, cb) {
       return download(url, filename, (err, requestContent) => {
         if (err) return cb(err);
 
-        spiderLinks(url, requestContent, nesting, cb);
+        // spiderLinks(url, requestContent, nesting, cb);
+        spiderLinksParallel(url, requestContent, nesting, cb);
       });
     }
 
-    spiderLinks(url, fileContent, nesting, cb);
+    // spiderLinks(url, fileContent, nesting, cb);
+    spiderLinksParallel(url, fileContent, nesting, cb);
   });
+}
+
+function spiderLinksParallel(currentUrl, body, nesting, cb) {
+  if (nesting === 0) return process.nextTick(cb);
+
+  const links = getPageLinks(currentUrl, body);
+  if (links.length === 0) return process.nextTick(cb);
+
+  let completed = 0;
+  let hasErrors = false;
+
+  function done(err) {
+    if (err) {
+      hasErrors = true;
+      return cb(err);
+    }
+
+    if (++completed === links.length && !hasErrors) {
+      return cb();
+    }
+  }
+
+  links.forEach(link => spider(link, nesting - 1, done));
 }
 
 function spiderLinks(currentUrl, body, nesting, cb) {

@@ -4,11 +4,13 @@ const { spider } = require('./spider.js');
 const url = process.argv[2];
 const nesting = Number.parseInt(process.argv[3], 10) || 1;
 
+const start = new Date();
 spider(process.argv[2], nesting, err => {
   if (err) {
     console.error(err);
     process.exit(1);
   } 
 
-  console.log(`Download complete`);
+  const end = new Date();
+  console.log(`Download complete`, end - start);
 });
