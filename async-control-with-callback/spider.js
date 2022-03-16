@@ -4,9 +4,14 @@ const superagent = require('superagent');
 const mkdirp = require('mkdirp');
 const { urlToFilename, getPageLinks } = require('./utils.js');
 
+const spidering = new Set();
+// 병렬 실행할 때 같은 url 이 들어오면 파일이 두 번 저장될 수 있음
 function spider(url, nesting, cb) {
+  if (spidering.has(url)) {
+    return process.nextTick(cb);
+  }
+  spidering.add(url);
   const filename = urlToFilename(url);
-
   fs.readFile(filename, 'utf-8', (err, fileContent) => {
     if (err) {
       if (err.code !== 'ENOENT') return cb(err);
