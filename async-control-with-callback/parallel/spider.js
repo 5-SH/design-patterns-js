@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const superagent = require('superagent');
 const mkdirp = require('mkdirp');
-const { urlToFilename, getPageLinks } = require('./utils.js');
+const { urlToFilename, getPageLinks } = require('../utils.js');
 
 const spidering = new Set();
 // 병렬 실행할 때 같은 url 이 들어오면 파일이 두 번 저장될 수 있음
@@ -19,17 +19,15 @@ function spider(url, nesting, cb) {
       return download(url, filename, (err, requestContent) => {
         if (err) return cb(err);
 
-        // spiderLinks(url, requestContent, nesting, cb);
-        spiderLinksParallel(url, requestContent, nesting, cb);
+        spiderLinks(url, requestContent, nesting, cb);
       });
     }
 
-    // spiderLinks(url, fileContent, nesting, cb);
-    spiderLinksParallel(url, fileContent, nesting, cb);
+    spiderLinks(url, fileContent, nesting, cb);
   });
 }
 
-function spiderLinksParallel(currentUrl, body, nesting, cb) {
+function spiderLinks(currentUrl, body, nesting, cb) {
   if (nesting === 0) return process.nextTick(cb);
 
   const links = getPageLinks(currentUrl, body);
@@ -71,25 +69,6 @@ function spiderLinksParallel(currentUrl, body, nesting, cb) {
   // }
 
   // links.forEach(link => spider(link, nesting - 1, done));
-}
-
-function spiderLinks(currentUrl, body, nesting, cb) {
-  if (nesting === 0) return process.nextTick(cb);
-
-  const links = getPageLinks(currentUrl, body);
-  if (links.length === 0) return process.nextTick(cb);
-
-  function iterate(index) {
-    if (index === links.length) return cb();
-
-    spider(links[index], nesting - 1, (err) => {
-      if (err) return cb(err);
-
-      iterate(index + 1);
-    });
-  }
-
-  iterate(0);
 }
 
 function saveFile(filename, contents, cb) {
