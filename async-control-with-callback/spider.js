@@ -37,19 +37,40 @@ function spiderLinksParallel(currentUrl, body, nesting, cb) {
 
   let completed = 0;
   let hasErrors = false;
+  const concurrency = 2;
+  let running = 0;
+  let index = 0;
 
-  function done(err) {
-    if (err) {
-      hasErrors = true;
-      return cb(err);
-    }
+  function next() {
+    while (running < concurrency && index < links.length) {
+      const link = links[index++];
 
-    if (++completed === links.length && !hasErrors) {
-      return cb();
+      console.log(link);
+
+      spider(link, nesting - 1, () => {
+        if (++completed === links.length) return cb();
+
+        running--;
+        next();
+      });
+      running++;
     }
   }
 
-  links.forEach(link => spider(link, nesting - 1, done));
+  next();
+
+  // function done(err) {
+  //   if (err) {
+  //     hasErrors = true;
+  //     return cb(err);
+  //   }
+
+  //   if (++completed === links.length && !hasErrors) {
+  //     return cb();
+  //   }
+  // }
+
+  // links.forEach(link => spider(link, nesting - 1, done));
 }
 
 function spiderLinks(currentUrl, body, nesting, cb) {
