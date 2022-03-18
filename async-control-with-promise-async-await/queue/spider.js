@@ -8,28 +8,31 @@ const TaskQueue = require('./taskQueue');
 
 const mkdirPromises = promisify(mkdirp);
 
-function download(url, filename) {
+async function download(url, filename) {
   console.log(`Downloading ${url}`);
-  let content;
-  return superagent.get(url)
-    .then(res => {
-      content = res.text;
-      return mkdirPromises(dirname(filename));
-    })
-    .then(() => fsPromises.writeFile(filename, content))
-    .then(() => {
-      console.log(`Downloaded and saved: ${url}`)
-      return content;
-    });
+  const { text: content } = await superagent.get(url);
+  await mkdirPromises(dirname(filename));
+  await fsPromises.writeFile(filename, content);
+  console.log(`Downloaded and saved: ${url}`);
+  return content;
+
+  // return superagent.get(url)
+  //   .then(res => {
+  //     content = res.text;
+  //     return mkdirPromises(dirname(filename));
+  //   })
+  //   .then(() => fsPromises.writeFile(filename, content))
+  //   .then(() => {
+  //     console.log(`Downloaded and saved: ${url}`)
+  //     return content;
+  //   });
 }
 
 function spiderLinks(currentUrl, content, nesting, queue) {
   let promise = Promise.resolve();
   if (nesting === 0) return promise;
 
-  const links = getPageLinks(currentUrl, content);
   const promises = links.map(link => spiderTask(link, nesting - 1, queue));
-
   return Promise.all(promises);
 }
 
