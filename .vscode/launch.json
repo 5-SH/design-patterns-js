@@ -11,8 +11,8 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\spider-cli.js",
-      "args": ["https://loige.co"]
+      "program": "${workspaceFolder}\\async-control-with-promise-async-await\\queue\\spider-cli.js",
+      "args": ["https://loige.co", "1", "10"]
     }
   ]
 }
