@@ -4,7 +4,7 @@ const { createReadStream } = require('fs');
 const { basename, join } = require('path');
 const { createCipheriv, randomBytes, scryptSync } = require('crypto');
 
-// node gzip-client ./sample/1GB.bin localhost
+// node ./intro/gzip-client ./sample/1GB.bin localhost
 
 const filename = process.argv[2];
 const serverHost = process.argv[3];
