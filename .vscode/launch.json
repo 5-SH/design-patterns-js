@@ -11,8 +11,8 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\async-control-with-promise-async-await\\queue\\spider-cli.js",
-      "args": ["https://loige.co", "1", "10"]
+      "program": "${workspaceFolder}\\stream-coding\\unordered-limited-parallel-execution\\check-url.js",
+      "args": ["${workspaceFolder}\\stream-coding\\unordered-limited-parallel-execution\\500urls.txt"]
     }
   ]
 }

@@ -13,6 +13,9 @@
     "chance": "^1.1.8",
     "csv-parse": "^5.0.4",
     "mkdirp": "^1.0.4",
+    "parallel-transform": "^1.2.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "split": "^1.0.1",
     "superagent": "^7.1.1"
   }
