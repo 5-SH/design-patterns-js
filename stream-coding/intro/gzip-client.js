@@ -30,7 +30,7 @@ const req = request(httpRequestOptions, res => {
 });
 
 createReadStream(filename)
-.pipe(createCipheriv('aes192', secret, iv))
-.pipe(createGzip())
+  .pipe(createCipheriv('aes192', secret, iv))
+  .pipe(createGzip())
   .pipe(req)
   .on('finish', () => console.log(`File sucessfully sent`));
