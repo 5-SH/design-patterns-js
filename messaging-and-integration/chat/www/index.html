@@ -11,11 +11,12 @@
       const ws = new WebSocket(
         `ws://${window.document.location.host}`
       );
-      ws.onmessage = function (message) {
-        console.log('msg', message.data);
+      ws.onmessage = async function (message) {
+        
+        const content = await message.data.text();
 
         const msgDiv = document.createElement('div');
-        msgDiv.innerHTML = message.data;
+        msgDiv.innerHTML = content;
         document.getElementById('messages').appendChild(msgDiv);
       }
       const form = document.getElementById('msgForm');
