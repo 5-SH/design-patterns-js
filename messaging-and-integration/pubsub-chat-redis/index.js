@@ -6,6 +6,7 @@ const Redis = require('ioredis');
 const redisSub = new Redis();
 const redisPub = new Redis();
 
+// node index.js 8080
 const server = createServer((req, res) => {
   return staticHandler(req, res, { public: 'www' });
 });
@@ -22,7 +23,6 @@ wss.on('connection', client => {
 
 redisSub.subscribe('chat_messages');
 redisSub.on('message', (channel, msg) => {
-  console.log('msg', msg);
   for (const client of wss.clients) {
     if (client.readyState === ws.OPEN) {
       client.send(msg);
