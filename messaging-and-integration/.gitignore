@@ -1,0 +1,6 @@
+node_modules
+package-lock.json
+1GB.bin*
+10GB.bin*
+.vscode
+!.vscode/launch.json
