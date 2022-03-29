@@ -1,6 +1,10 @@
 const { createServer } = require('http');
 const staticHandler = require('serve-handler');
 const ws = require('ws');
+const Redis = require('ioredis');
+
+const redisSub = new Redis();
+const redisPub = new Redis();
 
 const server = createServer((req, res) => {
   return staticHandler(req, res, { public: 'www' });
@@ -11,9 +15,20 @@ wss.on('connection', client => {
   console.log('Client connected');
   client.on('message', msg => {
     console.log(`Message: ${msg}`);
-    broadcast(msg);
+    // broadcast(msg);
+    redisPub.publish('chat_messages', msg);
   });
 });
+
+redisSub.subscribe('chat_messages');
+redisSub.on('message', (channel, msg) => {
+  console.log('msg', msg);
+  for (const client of wss.clients) {
+    if (client.readyState === ws.OPEN) {
+      client.send(msg);
+    }
+  }
+})
 
 function broadcast(msg) {
   for (const client of wss.clients) {

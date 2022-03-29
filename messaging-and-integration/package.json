@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ioredis": "^5.0.1",
     "serve-handler": "^6.1.3",
     "ws": "^8.5.0"
   }

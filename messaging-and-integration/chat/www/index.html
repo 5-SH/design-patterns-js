@@ -12,11 +12,8 @@
         `ws://${window.document.location.host}`
       );
       ws.onmessage = async function (message) {
-        
-        const content = await message.data.text();
-
         const msgDiv = document.createElement('div');
-        msgDiv.innerHTML = content;
+        msgDiv.innerHTML = message.data;
         document.getElementById('messages').appendChild(msgDiv);
       }
       const form = document.getElementById('msgForm');
