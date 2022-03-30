@@ -4,3 +4,4 @@ package-lock.json
 10GB.bin*
 .vscode
 !.vscode/launch.json
+msgHistory
